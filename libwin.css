@@ -1,0 +1,66 @@
+.window {
+	position: absolute;
+	border: 0 solid;
+	background-color: #f0f0f0;
+	padding: 0;
+	box-shadow: 0 2px 16px rgb(0 0 0/15%);
+	font-size: 12px;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.window-titleBar {
+	border: 0;
+	background-color: white;
+	height: 30px;
+	color: black;
+	padding: 0 0 0 10px;
+	font-weight: 500;
+	font-family: 'Open Sans', 'Microsoft Yahei UI', 'Segoe UI', Geneva, Tahoma, sans-serif;
+	font-size: 12px;
+}
+.window-titleBar button {
+	border-radius: 0;
+	border: 0;
+	width: 45px;
+	height: 30px;
+	padding: 0;
+	background-color: transparent;
+	color: black;
+	font-size: 13px;
+	transition: background-color 200ms;
+}
+
+.window-title {
+	text-align: center;
+	line-height: 30px;
+}
+
+.window-icon {
+	float: left;
+}
+
+.window-maximize {
+	float: right;
+}
+
+.window-minimize {
+	float: right;
+}
+
+.window-close {
+	float: right;
+}
+
+.window-maximize:hover {
+	background-color: #11111120;
+}
+
+.window-minimize:hover {
+	background-color: #11111120;
+}
+
+.window-close:hover {
+	background-color: rgb(232,17,35);
+	color: white;
+}
