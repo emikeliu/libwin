@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: MenuItem</title>
+    <title>JSDoc: Class: MessageBox</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: MenuItem</h1>
+    <h1 class="page-title">Class: MessageBox</h1>
 
     
 
@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>MenuItem<span class="signature">(caption, callbackFunction)</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>MessageBox<span class="signature">(father, title, prompt, flags, id, callbackFunction)</span><span class="type-signature"></span></h2>
         
-            <div class="class-description">MenuItem 对象，用于创建单个目录项，带有回调函数，点击目录项时即执行</div>
+            <div class="class-description">MessageBox 对象，用于创建替代 alert() 的窗口。</div>
         
     
 </header>
@@ -45,7 +45,7 @@
     
 
     
-    <h4 class="name" id="MenuItem"><span class="type-signature"></span>new MenuItem<span class="signature">(caption, callbackFunction)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="MessageBox"><span class="type-signature"></span>new MessageBox<span class="signature">(father, title, prompt, flags, id, callbackFunction)</span><span class="type-signature"></span></h4>
     
 
     
@@ -85,7 +85,30 @@
 
         <tr>
             
-                <td class="name"><code>caption</code></td>
+                <td class="name"><code>father</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Window.html">Window</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">父窗口</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>title</code></td>
             
 
             <td class="type">
@@ -101,7 +124,76 @@
 
             
 
-            <td class="description last">目录项名称</td>
+            <td class="description last">标题</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>prompt</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">提示词</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>flags</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#ButtonFlags">ButtonFlags</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">按钮类型标记，使用逻辑或设置，使用逻辑与解析</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">窗口id</td>
         </tr>
 
     
@@ -124,7 +216,7 @@
 
             
 
-            <td class="description last">回调函数</td>
+            <td class="description last">回调函数，带有一个参数，接受输入</td>
         </tr>
 
     
@@ -172,7 +264,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="libwin.js.html">libwin.js</a>, <a href="libwin.js.html#line37">line 37</a>
+        <a href="libwin.js.html">libwin.js</a>, <a href="libwin.js.html#line385">line 385</a>
     </li></ul></dd>
     
 

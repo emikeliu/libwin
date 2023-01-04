@@ -4,23 +4,82 @@
  * @copyright Mike Liu 2021-2022
  */
 
-var currentElement = {};
+let currentElement = {};
 
-var mouseBaseX = 0;
-var mouseBaseY = 0;
-
+let mouseBaseX = 0;
+let mouseBaseY = 0;
 
 /**
- * MenuItem
+ * 按钮类型 Enum
+ * @readonly
+ * @enum {number}
+ */
+let ButtonFlags = {
+	/** OK 钮 */
+	OK: 1,
+	/** 取消 钮 */
+	CANCEL: 2,
+	/** 是 钮 */
+	YES: 4,
+	/** 否 钮 */
+	NO: 8
+};
+
+/**
+ * MenuItem 对象，用于创建单个目录项，带有回调函数，
+ * 点击目录项时即执行
+ * 
+ * @author Mike Liu
+ * @constructor
+ * @param {String} caption 目录项名称
+ * @param {Function} callbackFunction 回调函数
+ */
+class MenuItem {
+	caption = ""
+	callbackFunction = function () { }
+	constructor(caption, callbackFunction) {
+		this.caption = caption;
+		this.callbackFunction = callbackFunction;
+	}
+
+}
+
+/**
+ * MenuList 对象，用于创建单个目录
+ * 
+ * @author Mike Liu
+ * @constructor
+ * @param {String} title 标题
+ * @param {MenuItem[]} items 目录项
+ */
+class MenuList {
+	title = ""
+	items = []
+	constructor(title, items) {
+		this.title = title;
+		this.items = items;
+	}
+}
+
+/**
+ * Menu 对象，用于创建目录项
+ * 
+ * @author Mike Liu
+ * @constructor
+ * @param {MenuList[]} menu 目录项
  */
 
-class MenuItem {
-
+class Menu {
+	menu = [new MenuList("File", [new MenuItem()])]
+	constructor(menu) {
+		this.menu = menu;
+	}
 }
 /**
  * Config 对象，用于创建 Window 类
  * 
  * @author Mike Liu
+ * @constructor
  * @param {Window} config.father 初始化的窗口的父窗口
  * @param {boolean} config.hasCloseButton 是否有关闭按钮
  * @param {boolean} config.hasMinimizeButton 是否有最小化按钮
@@ -29,16 +88,15 @@ class MenuItem {
  * @param {number} config.relativeY 相对父组件的Y位置
  * @param {number} config.width 窗体的绝对水平长度
  * @param {number} config.height 窗体的绝对垂直长度
- * @param {MenuItem[]} config.menu 窗体菜单
+ * @param {Menu[]} config.menu 窗体菜单
  * @param {String} config.title 窗体标题
  * @param {String} config.icon 窗体图标字符串，窗体图标的URL或字体名
  * @param {String} config.id 窗口id，用于确定窗体内容的div
  * @param {boolean} config.resizable 是否可调整尺寸
  * 
- * 
  */
 class Config {
-	father=null;
+	father = null;
 	hasCloseButton = true;
 	hasMinimizeButton = true;
 	hasMaximizeButton = true;
@@ -46,7 +104,7 @@ class Config {
 	relativeY = 0;
 	width = 0;
 	height = 0;
-	menu = [];
+	menu = new Menu();
 	title = null;
 	icon = null;
 	id = null;
@@ -92,7 +150,7 @@ class Window {
 		this.resizable = config.resizable ? config.resizable : false;
 
 
-		if (!config.father) {
+		if (!config.father || config.father == null) {
 			this.hasFatherWindow = false;
 			config.father = document.getElementById("container");
 		}
@@ -168,8 +226,8 @@ class Window {
 			let closeButton = document.createElement("button")
 			closeButton.id = config.id + "_close";
 			closeButton.className = "window-close codicon codicon-chrome-close";
-			closeButton.addEventListener("click", (function(elem) {
-				return function() {
+			closeButton.addEventListener("click", (function (elem) {
+				return function () {
 					elem.remove();
 				}
 			})(this.element))
@@ -209,8 +267,8 @@ class Window {
 			let minimizeButton = document.createElement("button")
 			minimizeButton.id = config.id + "_minimize";
 			minimizeButton.className = "window-minimize codicon codicon-chrome-minimize";
-			minimizeButton.addEventListener("click", (function(elem) {
-				return function() {
+			minimizeButton.addEventListener("click", (function (elem) {
+				return function () {
 					this.isMinimized = !this.isMinimized;
 					elem.style.display = "none";
 				}
@@ -307,8 +365,101 @@ class Window {
 		config.father.appendChild(this.element);
 
 	}
+}
 
-	getTaskElement() {
 
+/**
+ * MessageBox 对象，用于创建替代 alert() 的
+ * 窗口。
+ * 
+ * @author Mike Liu
+ * @constructor
+ * @param {Window} father 父窗口
+ * @param {String} title 标题
+ * @param {String} prompt 提示词
+ * @param {ButtonFlags} flags 按钮类型标记，使用逻辑或设置，使用逻辑与解析
+ * @param {String} id 窗口id
+ * @param {Function(Number)} callbackFunction 回调函数，带有一个参数，接受输入
+ * 
+ */
+class MessageBox {
+	constructor(father, title, prompt, flags, id, callbackFunction) {
+		this.window = new Window({
+			father: father,
+			hasCloseButton: true,
+			hasMinimizeButton: false,
+			hasMaximizeButton: false,
+			relativeX: 50,
+			relativeY: 50,
+			width: 400,
+			height: 300,
+			menu: [],
+			title: title,
+			icon: null,
+			id: id,
+			resizable: false
+		});
+		document.getElementById(id + "_inner").innerHTML = "<p>" + prompt + "</p>";
+		if (flags & ButtonFlags.OK) {
+			document.getElementById(id + "_inner").innerHTML += '<button id="' + id + '_ok" class="button_ok">OK</button>';
+		}
+		if (flags & ButtonFlags.CANCEL) {
+			document.getElementById(id + "_inner").innerHTML += '<button id="' + id + '_cancel" class="button_cancel">Cancel</button>';
+		}
+		if (flags & ButtonFlags.YES) {
+			document.getElementById(id + "_inner").innerHTML += '<button id="' + id + '_yes" class="button_yes">Yes</button>';
+		}
+		if (flags & ButtonFlags.NO) {
+			document.getElementById(id + "_inner").innerHTML += '<button id="' + id + '_no" class="button_no">No</button>';
+		}
+		if (flags & ButtonFlags.OK) {
+			document.getElementById(id + "_ok").addEventListener("click", function () { callbackFunction(ButtonFlags.OK) });
+		}
+		if (flags & ButtonFlags.CANCEL) {
+			document.getElementById(id + "_cancel").addEventListener("click", function () { callbackFunction(ButtonFlags.CANCEL) });
+		}
+		if (flags & ButtonFlags.YES) {
+			document.getElementById(id + "_yes").addEventListener("click", function () { callbackFunction(ButtonFlags.YES) });
+		}
+		if (flags & ButtonFlags.NO) {
+			document.getElementById(id + "_no").addEventListener("click", function () { callbackFunction(ButtonFlags.NO) });
+		}
+	}
+}
+
+/**
+ * PromptWindow 对象，用于创建替代 prompt() 的
+ * 窗口。
+ * 
+ * @author Mike Liu
+ * @constructor
+ * @param {Window} father 父窗口
+ * @param {String} prompt 提示词
+ * @param {String} id 窗口id
+ * @param {Function(Number)} callbackFunction 回调函数，带有一个参数，接受输入
+ */
+class PromptWindow {
+	constructor(father, title, prompt, id, callbackFunction) {
+		this.window = new Window({
+			father: father,
+			hasCloseButton: true,
+			hasMinimizeButton: false,
+			hasMaximizeButton: false,
+			relativeX: 50,
+			relativeY: 50,
+			width: 400,
+			height: 300,
+			menu: [],
+			title: title,
+			icon: null,
+			id: id,
+			resizable: false
+		});
+		document.getElementById(id + "_inner").innerHTML = "<p>" + prompt + "</p>";
+		document.getElementById(id + "_inner").innerHTML += '<textarea id="' + id + '_textarea" class="prompt_textarea"></textarea>';
+		document.getElementById(id + "_inner").innerHTML += '<button id="' + id + '_button" class="prompt_button">确定</button>';
+		document.getElementById(id + "_button").addEventListener("click",function(){
+			callbackFunction(document.getElementById(id+"_textarea").value);
+		})
 	}
 }
