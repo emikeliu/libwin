@@ -1,7 +1,8 @@
 /**
  * @file A simple window manager written in JavaScript.
- * @version 0.1 build 1001
- * @copyright Mike Liu 2021-2022
+ * @version 0.1 build 1002
+ * @copyright Mike Liu and Li Tienle 2021-2023
+ * @license MIT
  */
 
 let currentElement = {};
